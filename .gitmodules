@@ -1,0 +1,3 @@
+[submodule "Custom_ELRS"]
+	path = Custom_ELRS
+	url = https://github.com/KingElrond/ExpressLRS-4.0.1-Custom.git
