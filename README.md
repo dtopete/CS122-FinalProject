@@ -11,3 +11,13 @@ Implement a multi-stage RC (Remote-Controlled) signal converter and a dashboard 
 # Software
 * For text processing from Pico to FPGA, we are using an[ framebuffer with LVGL provided to us](https://github.com/UCR-CS122A/icesugar-pro-framebuffer/tree/main)
 * we used a custom ELRS reciever PCB which had to have its own custom ELRS configuration made for it by Troy. (Link github later)
+
+* Expected progress for the project
+## Stage 1
+* 1. Program ELRS input to PPM output in the Pico
+* 2. This PPM output goes to the FPGA
+* 3. Pico SPI0 CRFS -> PPM to FPGA
+
+## Stage 2
+* 1. Pico SPI1 CRSF -> Channel Values to FPGA (Dispaly Controller stuff)
+* 2. FPGA -> 2 channels of PWM
