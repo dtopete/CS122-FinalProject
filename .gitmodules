@@ -1,0 +1,3 @@
+[submodule "icesugar-pro-framebuffer"]
+	path = icesugar-pro-framebuffer
+	url = git@github.com:dtopete/icesugar-pro-framebuffer.git
