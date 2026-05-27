@@ -35,14 +35,17 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(PICOCRSF PICOCRSF.c )
+add_executable(PICOCRSF
+        src/PICOCRSF.cpp
+        src/PPMReader.cpp
+)
 
 pico_set_program_name(PICOCRSF "PICOCRSF")
 pico_set_program_version(PICOCRSF "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(PICOCRSF 0)
-pico_enable_stdio_usb(PICOCRSF 0)
+pico_enable_stdio_usb(PICOCRSF 1)
 
 # Add the standard library to the build
 target_link_libraries(PICOCRSF
@@ -50,7 +53,7 @@ target_link_libraries(PICOCRSF
 
 # Add the standard include files to the build
 target_include_directories(PICOCRSF PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 # Add any user requested libraries
@@ -59,4 +62,3 @@ target_link_libraries(PICOCRSF
         )
 
 pico_add_extra_outputs(PICOCRSF)
-
