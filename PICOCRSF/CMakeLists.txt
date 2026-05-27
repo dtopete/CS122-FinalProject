@@ -38,6 +38,7 @@ pico_sdk_init()
 add_executable(PICOCRSF
         src/PICOCRSF.cpp
         src/PPMReader.cpp
+        src/PPMEncoder.cpp
 )
 
 pico_set_program_name(PICOCRSF "PICOCRSF")
