@@ -1,6 +1,6 @@
 [submodule "Custom_ELRS"]
 	path = Custom_ELRS
 	url = https://github.com/KingElrond/ExpressLRS-4.0.1-Custom.git
-[submodule "icesugar-pro-framebuffer"]
-	path = icesugar-pro-framebuffer
-	url = git@github.com:dtopete/icesugar-pro-framebuffer.git
+[submodule "icesugar-pro-framebuffer/sw/lvgl"]
+	path = icesugar-pro-framebuffer/sw/lvgl
+	url = https://github.com/lvgl/lvgl.git
