@@ -1,3 +1,9 @@
+/*
+This code originally written by Troy Drescher. 
+while debugging ELRS reciever hardware issues code was modified by codex. 
+this code wont be used in final submission. it is for showing proof of CRSF working.
+*/
+
 #include <stdio.h>
 
 #include "CRSFReader.h"
