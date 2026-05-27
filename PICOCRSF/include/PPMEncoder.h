@@ -50,7 +50,7 @@ class PPMEncoder {
 
   public:
     static const uint16_t MIN = 1000;
-    static const uint16_t MAX = 3000;
+    static const uint16_t MAX = 2200;
 
     PPMEncoder();
 
