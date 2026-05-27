@@ -161,16 +161,6 @@ class CRSFReader {
     uint16_t channelUs(uint8_t channel) const;
 
     /**
-     * Same as channelUs(), but named specifically for PPM generation code.
-     *
-     * PPM generators usually want channel pulse widths in microseconds.
-     *
-     * @param channel The channel index to read, from 0 to 15
-     * @return The PPM pulse width in microseconds
-     */
-    uint16_t channelPpmUs(uint8_t channel) const;
-
-    /**
      * Returns whether a valid CRSF RC frame has been received recently.
      *
      * This is useful for failsafe handling. If no valid RC frame has been
