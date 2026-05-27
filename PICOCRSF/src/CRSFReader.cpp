@@ -11,7 +11,11 @@
 CRSFReader::CRSFReader()
     : _frameIndex(0),
       _expectedFrameSize(0),
-      _lastFrameTime(0)
+      _lastFrameTime(0),
+      _validFrameCount(0),
+      _crcErrorCount(0),
+      _rcFrameCount(0),
+      _lastFrameType(0)
 {
     // Initialize all channel values to center.
     for (uint8_t i = 0; i < CRSF_CHANNEL_COUNT; i++)
@@ -74,8 +78,8 @@ bool CRSFReader::handleFrame()
 {
     // This function is called once _frame contains a complete CRSF frame.
     
-    //read frame type
     uint8_t frameType = _frame[2];
+    _lastFrameType = frameType;
 
     //find received CRC
     uint8_t receivedCrc = _frame[_expectedFrameSize - 1];
@@ -85,10 +89,12 @@ bool CRSFReader::handleFrame()
 
     if (receivedCrc != calculatedCrc) 
     {
+        _crcErrorCount++;
         return false;
     }
 
-    //only handle frames that are RC
+    _validFrameCount++;
+
     if (frameType != CRSF_FRAMETYPE_RC_CHANNELS_PACKED) 
     {
         return false;
@@ -104,6 +110,7 @@ bool CRSFReader::handleFrame()
     }
 
     _lastFrameTime = time_us_32();
+    _rcFrameCount++;
     return true;
 }
 
@@ -202,6 +209,26 @@ bool CRSFReader::signalValid() const
 {
     // Return true if the most recent valid frame is recent enough.
     return frameAgeUs() <= CRSF_DEFAULT_SIGNAL_TIMEOUT_US;
+}
+
+uint32_t CRSFReader::validFrameCount() const
+{
+    return _validFrameCount;
+}
+
+uint32_t CRSFReader::crcErrorCount() const
+{
+    return _crcErrorCount;
+}
+
+uint32_t CRSFReader::rcFrameCount() const
+{
+    return _rcFrameCount;
+}
+
+uint8_t CRSFReader::lastFrameType() const
+{
+    return _lastFrameType;
 }
 
 uint32_t CRSFReader::frameAgeUs() const

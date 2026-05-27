@@ -170,6 +170,11 @@ class CRSFReader {
      */
     bool signalValid() const;
 
+    uint32_t validFrameCount() const;
+    uint32_t crcErrorCount() const;
+    uint32_t rcFrameCount() const;
+    uint8_t lastFrameType() const;
+
     /**
      * Returns the age of the last valid CRSF RC frame.
      *
@@ -261,6 +266,10 @@ class CRSFReader {
     uint16_t _channels[CRSF_CHANNEL_COUNT]; // Latest decoded raw CRSF channel values
 
     uint32_t _lastFrameTime; // Time of the last valid RC frame, in microseconds
+    uint32_t _validFrameCount;
+    uint32_t _crcErrorCount;
+    uint32_t _rcFrameCount;
+    uint8_t _lastFrameType;
 };
 
 #endif
