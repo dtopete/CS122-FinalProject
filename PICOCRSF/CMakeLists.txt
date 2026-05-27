@@ -39,7 +39,7 @@ add_executable(PICOCRSF
         src/PICOCRSF.cpp
         src/PPMReader.cpp
         src/PPMEncoder.cpp
-        src/CRSFDecoder.cpp
+        src/CRSFReader.cpp
 )
 
 pico_set_program_name(PICOCRSF "PICOCRSF")
