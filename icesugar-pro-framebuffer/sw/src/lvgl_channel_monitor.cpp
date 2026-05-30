@@ -1,4 +1,5 @@
 #include "lvgl_channel_monitor.h"
+#include "spi_display.h"
 #include "lv_conf.h"
 #include <lvgl.h>
 
@@ -110,6 +111,12 @@ uint32_t LVGL_ChannelMonitor::run() {
     lv_timer_t *update_timer = lv_timer_create(update_timer_cb, 100, this);
     lv_timer_ready(update_timer);
     return loop();
+}
+
+void LVGL_ChannelMonitor::handle_redraw_request() {
+    // Clear underlying display and recreate the LVGL UI
+    if (spi_display) spi_display->clear();
+    create_ui();
 }
 
 }}}}

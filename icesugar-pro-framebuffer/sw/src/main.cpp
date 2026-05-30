@@ -12,7 +12,14 @@
 #include <pico/binary_info.h>
 #include <pico/time.h>
 #include <hardware/spi.h>
+#include <hardware/gpio.h>
 #include <pico/cyw43_arch.h>
+
+// Button pin and IRQ handler at file scope (cannot define function inside main)
+static const uint BUTTON_PIN = 15;
+static void button_irq(uint gpio, uint32_t events) {
+    if (gpio == BUTTON_PIN) ucr::bcoe::cs::cs122::g_redraw_requested = true;
+}
 
 /*Return the elapsed milliseconds since startup.
  *It needs to be implemented by the user*/
@@ -59,6 +66,14 @@ int main(void) {
 	stdio_init_all();
 	cyw43_arch_init();
     adc_init();
+
+    // Configure GP15 as a button input to request a redraw/reset when pressed
+    gpio_init(BUTTON_PIN);
+    gpio_set_dir(BUTTON_PIN, GPIO_IN);
+    gpio_pull_up(BUTTON_PIN);
+
+    // Register callback for falling edge (button press to ground)
+    gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, button_irq);
 
     ucr::bcoe::SPIDisplay spi_display(480, 272, 5000000, 20);
     spi_display.begin();

@@ -12,7 +12,10 @@ namespace ucr { namespace bcoe {
         CS122_App(SPIDisplay *spi_disp, lv_display_flush_cb_t fcallback, lv_tick_get_cb_t tcallback);
         virtual uint32_t run() = 0;
 
-    private:
+        // Called by the framework when a redraw/reset has been requested (e.g. by a button)
+        virtual void handle_redraw_request();
+
+    protected:
         SPIDisplay *spi_display;
         uint8_t *framebuffer;
         lv_display_t *display;
@@ -20,9 +23,11 @@ namespace ucr { namespace bcoe {
         lv_tick_get_cb_t tick_callback;
         bool running;
 
-    protected:
         uint32_t loop();
     };
+
+    // Global flag set by ISR to request a redraw from the main loop
+    extern volatile bool g_redraw_requested;
 }}}}
 
 #endif

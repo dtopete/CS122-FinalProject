@@ -2,7 +2,14 @@
 #include "spi_display.h"
 #include <pico/time.h>
 
+// Global redraw request flag (set from ISR) - define in the same namespace as the declaration
+volatile bool ucr::bcoe::cs::cs122::g_redraw_requested = false;
+
 namespace ucr { namespace bcoe { namespace cs { namespace cs122 {
+
+    void CS122_App::handle_redraw_request() {
+        // default: do nothing. Derived classes may override.
+    }
     CS122_App::CS122_App(SPIDisplay *spi_disp, lv_display_flush_cb_t fcallback, lv_tick_get_cb_t tcallback) :
         spi_display(spi_disp), flush_callback(fcallback), tick_callback(tcallback), running(false) {
         lv_init();
@@ -29,6 +36,10 @@ namespace ucr { namespace bcoe { namespace cs { namespace cs122 {
         running = true;
         while(running) {
             lv_timer_handler();
+            if (g_redraw_requested) {
+                g_redraw_requested = false;
+                handle_redraw_request();
+            }
             sleep_ms(5);  /*Wait 5 milliseconds before processing LVGL timer again*/
         }
         return 0;
