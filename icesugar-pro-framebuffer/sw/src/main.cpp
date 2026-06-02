@@ -19,7 +19,6 @@
 
 // PICO CRSF serial monitor configuration
 #define CRSF_BAUD 420000
-#define UART0_RX_PIN 1
 #define UART1_RX_PIN 5
 
 struct UartMonitor {
@@ -33,7 +32,6 @@ struct UartMonitor {
     uint8_t recentByteIndex;
 };
 
-static UartMonitor uart0Monitor = {uart0, UART0_RX_PIN, "UART0/GP1"};
 static UartMonitor uart1Monitor = {uart1, UART1_RX_PIN, "UART1/GP5"};
 
 static void beginMonitor(UartMonitor &monitor)
@@ -111,7 +109,6 @@ static void printChannels()
 
     lastPrintUs = nowUs;
 
-    printMonitor(uart0Monitor);
     printMonitor(uart1Monitor);
 }
 
@@ -175,13 +172,11 @@ int main(void) {
     // Register callback for falling edge (button press to ground)
     gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, button_irq);
 
-    // Create display and app instances
-    beginMonitor(uart0Monitor);
+    // Initialize CRSF UART monitor
     beginMonitor(uart1Monitor);
 
     printf("PICOCRSF CRSF UART monitor started\n");
-    printf("Listening on UART0 RX GPIO %u and UART1 RX GPIO %u at %u baud\n",
-           UART0_RX_PIN,
+    printf("Listening on UART1 RX GPIO %u at %u baud\n",
            UART1_RX_PIN,
            CRSF_BAUD);
 
@@ -195,7 +190,6 @@ int main(void) {
 
     while (true) {
         lv_timer_handler();
-        pollMonitor(uart0Monitor);
         pollMonitor(uart1Monitor);
         printChannels();
 
