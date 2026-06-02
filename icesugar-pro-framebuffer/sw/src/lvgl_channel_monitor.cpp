@@ -110,7 +110,7 @@ uint32_t LVGL_ChannelMonitor::run() {
     create_ui();
     lv_timer_t *update_timer = lv_timer_create(update_timer_cb, 100, this);
     lv_timer_ready(update_timer);
-    return loop();
+    return 0;
 }
 
 void LVGL_ChannelMonitor::handle_redraw_request() {

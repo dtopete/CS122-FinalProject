@@ -18,6 +18,7 @@ add_executable(cs122_demo
      src/main.cpp
      src/spi_display.cpp
      src/cs122_app.cpp
+     src/CRSFReader.cpp
      src/lvgl_touch.cpp
      src/lvgl_clock.cpp
      src/lvgl_channel_monitor.cpp
