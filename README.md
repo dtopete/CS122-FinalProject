@@ -21,3 +21,9 @@ Implement a multi-stage RC (Remote-Controlled) signal converter and a dashboard 
 ## Stage 2
 * 1. Pico SPI1 CRSF -> Channel Values to FPGA (Dispaly Controller stuff)
 * 2. FPGA -> 2 channels of PWM
+
+# Testing
+## Check the CRSF via ELRS (UART)
+* `pip install pyserial`
+* Locate the Pico's serial `ls /dev/cu.usbmodem11*`
+* Example for my machine: `python3 -m serial.tools.miniterm /dev/cu.usbmodem113401  113200`
