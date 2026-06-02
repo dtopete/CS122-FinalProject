@@ -16,6 +16,13 @@ void LVGL_ChannelMonitor::setChannelValue(int index, int value) {
     channel_values[index] = value;
 }
 
+void LVGL_ChannelMonitor::setChannelValues(const int16_t *percents) {
+    if (!percents) return;
+    for (int i = 0; i < CHANNEL_COUNT; i++) {
+        setChannelValue(i, percents[i]);
+    }
+}
+
 void LVGL_ChannelMonitor::create_ui() {
     lv_obj_t *screen = lv_screen_active();
     lv_obj_clean(screen);

@@ -10,6 +10,7 @@ namespace ucr { namespace bcoe { namespace cs { namespace cs122 {
         using CS122_App::CS122_App;
         virtual uint32_t run();
         void setChannelValue(int index, int value);
+        void setChannelValues(const int16_t *percents);
         void handle_redraw_request() override;
 
     private:

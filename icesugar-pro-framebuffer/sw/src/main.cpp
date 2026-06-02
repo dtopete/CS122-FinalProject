@@ -34,6 +34,20 @@ struct UartMonitor {
 
 static UartMonitor uart1Monitor = {uart1, UART1_RX_PIN, "UART1/GP5"};
 
+// Channel value storage (ch1-ch8)
+static uint16_t channelRaw[8];
+static int16_t channelPercent[8];
+static uint16_t channelUs[8];
+
+static void updateChannelValues(const UartMonitor &monitor)
+{
+    for (uint8_t i = 0; i < 8; i++) {
+        channelRaw[i] = monitor.reader.rawChannel(i);
+        channelPercent[i] = monitor.reader.channelPercent(i);
+        channelUs[i] = monitor.reader.channelUs(i);
+    }
+}
+
 static void beginMonitor(UartMonitor &monitor)
 {
     uart_init(monitor.uart, CRSF_BAUD);
@@ -191,6 +205,8 @@ int main(void) {
     while (true) {
         lv_timer_handler();
         pollMonitor(uart1Monitor);
+        updateChannelValues(uart1Monitor);
+        app.setChannelValues(channelPercent);
         printChannels();
 
         if (ucr::bcoe::cs::cs122::g_redraw_requested) {
