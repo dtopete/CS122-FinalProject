@@ -3,19 +3,25 @@
 #include "lv_conf.h"
 #include <lvgl.h>
 
+// declaring namespace ucr::bcoe::cs::cs122 to match the declaration in the header file
 namespace ucr { namespace bcoe { namespace cs { namespace cs122 {
 
+// Hardcoded 8 channel to match our controller input
+// Also fits nicely in the 2-column layout UI
 static const char *channel_names[8] = {
     "CH1", "CH2", "CH3", "CH4", "CH5", "CH6", "CH7", "CH8"
 };
 
+// Sets the value of a single channel (index 0-7) and bounds to range -100 to 100
 void LVGL_ChannelMonitor::setChannelValue(int index, int value) {
     if (index < 0 || index >= CHANNEL_COUNT) return;
+    // Bounds value from -100 to 100 for display (displays as percentage, so this is the expected range)
     if (value < -100) value = -100;
     if (value > 100) value = 100;
     channel_values[index] = value;
 }
 
+// Sets the channel values from an array of percentages (expected range -100 to 100) and updates the display
 void LVGL_ChannelMonitor::setChannelValues(const int16_t *percents) {
     if (!percents) return;
     for (int i = 0; i < CHANNEL_COUNT; i++) {
@@ -23,18 +29,22 @@ void LVGL_ChannelMonitor::setChannelValues(const int16_t *percents) {
     }
 }
 
+// UI of channel monitor app, showing 8 channels with bars and percentage labels
 void LVGL_ChannelMonitor::create_ui() {
+    // Clear the screen and set background color
     lv_obj_t *screen = lv_screen_active();
     lv_obj_clean(screen);
     lv_obj_set_style_bg_color(screen, lv_color_black(), LV_PART_MAIN);
     lv_obj_set_style_bg_opa(screen, LV_OPA_COVER, LV_PART_MAIN);
 
+    // Title label at the top
     lv_obj_t *title_label = lv_label_create(screen);
     lv_label_set_text(title_label, "CHANNELS MONITOR");
     lv_obj_set_style_text_color(title_label, lv_color_white(), LV_PART_MAIN);
     lv_obj_set_style_text_font(title_label, &lv_font_montserrat_20, LV_PART_MAIN);
     lv_obj_align(title_label, LV_ALIGN_TOP_MID, 0, 10);
 
+    // Container for the channel bars and labels, using a 2-column flex layout
     lv_obj_t *body = lv_obj_create(screen);
     lv_obj_set_size(body, lv_pct(100), lv_pct(100));
     lv_obj_align(body, LV_ALIGN_TOP_LEFT, 0, 50);
@@ -47,6 +57,7 @@ void LVGL_ChannelMonitor::create_ui() {
     lv_obj_set_style_pad_row(body, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_column(body, 0, LV_PART_MAIN);
 
+    // Create 2 columns, each with 4 rows for the 8 channels
     for (int col = 0; col < 2; ++col) {
         lv_obj_t *column = lv_obj_create(body);
         lv_obj_set_width(column, 230);
@@ -58,8 +69,9 @@ void LVGL_ChannelMonitor::create_ui() {
         lv_obj_set_style_pad_all(column, 0, LV_PART_MAIN);
         lv_obj_set_style_pad_row(column, 6, LV_PART_MAIN);
 
+        // Each row has a channel name label, a bar representing the channel value, and a percentage label showing the numeric value
         for (int row = 0; row < 4; ++row) {
-            int index = col * 4 + row;
+            int index = col * 4 + row; // row-major order index
             lv_obj_t *row_cont = lv_obj_create(column);
             lv_obj_set_size(row_cont, lv_pct(100), 30);
             lv_obj_set_style_bg_opa(row_cont, LV_OPA_TRANSP, LV_PART_MAIN);
@@ -70,12 +82,14 @@ void LVGL_ChannelMonitor::create_ui() {
             lv_obj_set_style_pad_all(row_cont, 0, LV_PART_MAIN);
             lv_obj_set_style_pad_column(row_cont, 4, LV_PART_MAIN);
 
+            // Channel name label (e.g. "CH1")
             lv_obj_t *name_label = lv_label_create(row_cont);
             lv_label_set_text(name_label, channel_names[index]);
             lv_obj_set_width(name_label, 60);
             lv_obj_set_style_text_color(name_label, lv_color_white(), LV_PART_MAIN);
             lv_obj_set_style_text_font(name_label, &lv_font_montserrat_14, LV_PART_MAIN);
 
+            // Bar representing channel value, with a vertical line at the center to indicate zero
             channel_bars[index] = lv_bar_create(row_cont);
             lv_obj_set_size(channel_bars[index], 120, 16);
             lv_bar_set_range(channel_bars[index], -100, 100);
@@ -86,9 +100,10 @@ void LVGL_ChannelMonitor::create_ui() {
             lv_obj_set_style_border_width(channel_bars[index], 1, LV_PART_MAIN);
             lv_obj_set_style_border_color(channel_bars[index], lv_color_white(), LV_PART_MAIN);
             lv_obj_set_style_pad_all(channel_bars[index], 0, LV_PART_MAIN);
-            lv_obj_set_style_radius(channel_bars[index], 4, LV_PART_MAIN);
+            lv_obj_set_style_radius(channel_bars[index], 4, LV_PART_MAIN); // Rounded corners look nice
             lv_obj_set_style_bg_color(channel_bars[index], lv_color_black(), LV_PART_MAIN);
 
+            // Vertical line at center of bar to indicate zero position
             lv_obj_t *zero_line = lv_obj_create(channel_bars[index]);
             lv_obj_set_size(zero_line, 1, 16);
             lv_obj_set_style_bg_color(zero_line, lv_color_white(), LV_PART_MAIN);
@@ -96,6 +111,7 @@ void LVGL_ChannelMonitor::create_ui() {
             lv_obj_set_style_border_width(zero_line, 0, LV_PART_MAIN);
             lv_obj_align(zero_line, LV_ALIGN_CENTER, 0, 0);
 
+            // Percentage label showing numeric value (e.g. "-75")
             channel_value_labels[index] = lv_label_create(row_cont);
             lv_label_set_text_fmt(channel_value_labels[index], "%4d", 0);
             lv_obj_set_width(channel_value_labels[index], 30);
@@ -105,6 +121,7 @@ void LVGL_ChannelMonitor::create_ui() {
     }
 }
 
+// Timer callback to update the channel bars and labels with the latest values
 void LVGL_ChannelMonitor::update_timer_cb(lv_timer_t * timer) {
     LVGL_ChannelMonitor *monitor = reinterpret_cast<LVGL_ChannelMonitor *>(lv_timer_get_user_data(timer));
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
@@ -113,6 +130,7 @@ void LVGL_ChannelMonitor::update_timer_cb(lv_timer_t * timer) {
     }
 }
 
+// Main loop of the app, creates the UI and starts a timer to update the display with channel values
 uint32_t LVGL_ChannelMonitor::run() {
     create_ui();
     lv_timer_t *update_timer = lv_timer_create(update_timer_cb, 100, this);
@@ -120,6 +138,7 @@ uint32_t LVGL_ChannelMonitor::run() {
     return 0;
 }
 
+// Handles redraw requests by clearing the display and recreating the UI (e.g. when the button is pressed)
 void LVGL_ChannelMonitor::handle_redraw_request() {
     // Clear underlying display and recreate the LVGL UI
     if (spi_display) spi_display->clear();

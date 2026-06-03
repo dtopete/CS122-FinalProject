@@ -21,6 +21,7 @@
 #define CRSF_BAUD 420000
 #define UART1_RX_PIN 5
 
+// Holds CRSF reader state and stats for a UART
 struct UartMonitor {
     uart_inst_t *uart;
     uint8_t rxPin;
@@ -32,6 +33,7 @@ struct UartMonitor {
     uint8_t recentByteIndex;
 };
 
+// Initialize UART monitor for UART1 (connected to CRSF receiver)
 static UartMonitor uart1Monitor = {uart1, UART1_RX_PIN, "UART1/GP5"};
 
 // Channel value storage (ch1-ch8)
@@ -39,6 +41,8 @@ static uint16_t channelRaw[8];
 static int16_t channelPercent[8];
 static uint16_t channelUs[8];
 
+// Updates the channel value arrays from the latest CRSF reader state
+// Updated LVGL app with latest channel percentages for display
 static void updateChannelValues(const UartMonitor &monitor)
 {
     for (uint8_t i = 0; i < 8; i++) {
@@ -48,6 +52,7 @@ static void updateChannelValues(const UartMonitor &monitor)
     }
 }
 
+// Initializes the UART for CRSF reading
 static void beginMonitor(UartMonitor &monitor)
 {
     uart_init(monitor.uart, CRSF_BAUD);
@@ -56,6 +61,7 @@ static void beginMonitor(UartMonitor &monitor)
     uart_set_fifo_enabled(monitor.uart, true);
 }
 
+// Polls the UART for new bytes and feeds them into the CRSF reader
 static void recordByte(UartMonitor &monitor, uint8_t byte)
 {
     monitor.receivedBytes++;
@@ -65,6 +71,7 @@ static void recordByte(UartMonitor &monitor, uint8_t byte)
     monitor.reader.processByte(byte);
 }
 
+// Polls the UART for all available bytes
 static void pollMonitor(UartMonitor &monitor)
 {
     while (uart_is_readable(monitor.uart)) {
@@ -72,6 +79,7 @@ static void pollMonitor(UartMonitor &monitor)
     }
 }
 
+// Prints the current state and channel values of the monitor to the console
 static void printRecentBytes(const UartMonitor &monitor)
 {
     printf(" recent=");
@@ -82,6 +90,7 @@ static void printRecentBytes(const UartMonitor &monitor)
     }
 }
 
+// Prints the current state and channel values of the monitor to the console
 static void printMonitor(UartMonitor &monitor)
 {
     uint32_t bytesPerSecond = (monitor.receivedBytes - monitor.bytesAtLastPrint) * 10;
@@ -112,6 +121,7 @@ static void printMonitor(UartMonitor &monitor)
     printf("\n");
 }
 
+// Prints the current channel values to the console at a regular interval
 static void printChannels()
 {
     static uint32_t lastPrintUs = 0;
@@ -132,15 +142,15 @@ static void button_irq(uint gpio, uint32_t events) {
     if (gpio == BUTTON_PIN) ucr::bcoe::cs::cs122::g_redraw_requested = true;
 }
 
-/*Return the elapsed milliseconds since startup.
- *It needs to be implemented by the user*/
+// Returns elapsed milliseconds since boot, for LVGL's timing functions
 uint32_t cs122_get_millis(void) {
     return to_ms_since_boot(get_absolute_time());
 }
 
+// Buffer for converting LVGL's 16-bit RGB565 format to the 8-bit format expected by the display
 static uint8_t buffer[OLEDRGB_WIDTH * OLEDRGB_HEIGHT / 10];
 
-/*Copy the rendered image to the screen. */
+// Copy the rendered image to the screen
 void cs122_flush_cb_direct(lv_display_t * disp, const lv_area_t * area, uint8_t * px_buf) {
     ucr::bcoe::SPIDisplay *spi_display = reinterpret_cast<ucr::bcoe::SPIDisplay *>(lv_display_get_user_data(disp));
 	uint32_t i = 0;
@@ -151,24 +161,22 @@ void cs122_flush_cb_direct(lv_display_t * disp, const lv_area_t * area, uint8_t 
 		}
 	}
 
-    /*Show the rendered image on the display*/
+    // SHows rendered image to display
     spi_display->drawBitmap(area->x1, area->y1, area->x2, area->y2, buffer);
 
-    /*Indicate that the buffer is available.
-     *If DMA were used, call in the DMA complete interrupt*/
+    // In this direct flush callback, we can call lv_display_flush_ready immediately after drawing since we're not using DMA and the buffer can be reused right away.
     lv_display_flush_ready(disp);
 }
 
-/*It needs to be implemented by the user*/
+// This callback is called when LVGL needs to flush a portion of the screen (defined by 'area') with new pixel data (in 'px_buf').
 void cs122_flush_cb_partial(lv_display_t * disp, const lv_area_t * area, uint8_t * px_buf) {
 	uint32_t size = (area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1);
 
-    /*Show the rendered image on the display*/
+    // Shows rendered image to display
     ucr::bcoe::SPIDisplay *spi_display = reinterpret_cast<ucr::bcoe::SPIDisplay *>(lv_display_get_user_data(disp));
     spi_display->drawBitmap(2 * area->x1, area->y1, 2 * area->x2+1, area->y2, px_buf);
 
-    /*Indicate that the buffer is available.
-     *If DMA were used, call in the DMA complete interrupt*/
+    // Checks if buffer is available
     lv_display_flush_ready(disp);
 }
 
@@ -188,7 +196,6 @@ int main(void) {
 
     // Initialize CRSF UART monitor
     beginMonitor(uart1Monitor);
-
     printf("PICOCRSF CRSF UART monitor started\n");
     printf("Listening on UART1 RX GPIO %u at %u baud\n",
            UART1_RX_PIN,
@@ -203,17 +210,18 @@ int main(void) {
     app.run();
 
     while (true) {
-        lv_timer_handler();
-        pollMonitor(uart1Monitor);
-        updateChannelValues(uart1Monitor);
-        app.setChannelValues(channelPercent);
-        printChannels();
+        lv_timer_handler(); // Handle LVGL timers (e.g. for UI updates)
+        pollMonitor(uart1Monitor); // Read any new CRSF data from UART
+        updateChannelValues(uart1Monitor); // Update channel values from the latest CRSF data
+        app.setChannelValues(channelPercent); // Update the app with the latest channel percentages for display
+        printChannels(); // Print channel values and stats to the console
 
-        if (ucr::bcoe::cs::cs122::g_redraw_requested) {
+        // redraw display if requested (button press)
+        if (ucr::bcoe::cs::cs122::g_redraw_requested) { 
             ucr::bcoe::cs::cs122::g_redraw_requested = false;
             app.handle_redraw_request();
         }
 
-        sleep_ms(5);
+        sleep_ms(5); // Refresh rate of ~200Hz for LVGL timers and UART polling
     }
 }
