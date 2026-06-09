@@ -52,6 +52,18 @@ static void updateChannelValues(const UartMonitor &monitor)
     }
 }
 
+// Instanciate PPM Encoder object and FPGA output pin
+static PPMEncoder ppmEncoder;
+#define PPM_OUTPUT_PIN 13
+
+// Encodes the updated channelUs array into a PPM generator
+static void encodeChannelValuesPPM(const UartMonitor &monitor)
+{
+    for (uint8_t i = 0; i < 8; i++) {
+        ppmEncoder.setChannel(i, channelUs[i]);
+    }
+}
+
 // Initializes the UART for CRSF reading
 static void beginMonitor(UartMonitor &monitor)
 {
@@ -164,7 +176,7 @@ void cs122_flush_cb_direct(lv_display_t * disp, const lv_area_t * area, uint8_t 
     // SHows rendered image to display
     spi_display->drawBitmap(area->x1, area->y1, area->x2, area->y2, buffer);
 
-    // In this direct flush callback, we can call lv_display_flush_ready immediately after drawing since we're not using DMA and the buffer can be reused right away.
+    // Checks if buffer is available
     lv_display_flush_ready(disp);
 }
 
@@ -201,6 +213,9 @@ int main(void) {
            UART1_RX_PIN,
            CRSF_BAUD);
 
+    // Init PPM Encoder
+    ppmEncoder.begin(PPM_OUTPUT_PIN);
+
     // Create display and app instances
     ucr::bcoe::SPIDisplay spi_display(480, 272, 5000000, 20);
     spi_display.begin();
@@ -215,6 +230,9 @@ int main(void) {
         updateChannelValues(uart1Monitor); // Update channel values from the latest CRSF data
         app.setChannelValues(channelPercent); // Update the app with the latest channel percentages for display
         printChannels(); // Print channel values and stats to the console
+
+        // Encode PPM to FPGA (output is 1 cable)
+        encodeChannelValuesPPM(uart1Monitor);
 
         // redraw display if requested (button press)
         if (ucr::bcoe::cs::cs122::g_redraw_requested) { 
