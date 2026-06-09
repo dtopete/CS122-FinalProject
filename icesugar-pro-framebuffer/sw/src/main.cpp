@@ -5,6 +5,7 @@
 #include "lvgl_demo_widgets.h"
 #include "lvgl_touch.h"
 #include "CRSFReader.h"
+#include "PPMEncoder.h"
 
 #include <lvgl.h>
 
