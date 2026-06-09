@@ -73,7 +73,7 @@ The design consists of three main subsystems:
 #pagebreak()
 
 = AI usage
-AI assistance was used to 
+Limited AI assistance was used as a debugging aid during development, mainly for the custom ExpressLRS firmware and receiver configuration, and for getting the Pico CRSF UART input working by checking that CRSF data was being received correctly.
 
 = Acknowledgements
-// We thank the UCR CS122A course staff for the framebuffer and LVGL starter code, and the open-source communities behind the Raspberry Pi Pico SDK, LVGL, and ExpressLRS. Additional thanks to team member Troy Drescher for the custom ELRS firmware and receiver configuration work. AI Generated to see what it would say
+We thank the UCR CS122A course staff for the framebuffer and LVGL starter code, and the open-source communities behind the Raspberry Pi Pico SDK, LVGL, and ExpressLRS. Additional thanks to team member Troy Drescher for the custom ELRS firmware and receiver configuration work.
