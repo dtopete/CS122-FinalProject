@@ -1,2 +1,9 @@
 build
 !.vscode/*
+.vscode/*
+CMakeFiles/*
+pico-sdk/*
+venv/*
+*.py
+*.cmake
+CMakeCache.txt
