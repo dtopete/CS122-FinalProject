@@ -5,6 +5,18 @@ LOCATE      COMP "clk_25m"    SITE "P6";
 IOBUF       PORT "clk_25m"    IO_TYPE=LVCMOS33;
 FREQUENCY   PORT "clk_25m"    25 MHZ;
 
+// PPM Input from Pico
+LOCATE COMP "PPMinput" SITE "D6";
+INPUT PORT "PPMinput" IO_TYPE=LVCMOS33;
+
+// PWM output channel 2
+LOCATE COMP "ch2" SITE "G2";
+INPUT PORT  "ch2" IO_TYPE=LVCMOS33;
+
+// PWM output channel 3
+LOCATE COMP "ch3" SITE "L2";
+INPUT PORT "ch3" IO_TYPE=LVCMOS33;
+
 // LEDs
 //LOCATE COMP "led_r" SITE "B11"; 
 //IOBUF PORT "led_r" IO_TYPE=LVCMOS33;
