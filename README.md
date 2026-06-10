@@ -1,6 +1,8 @@
 # CS122-FinalProject
 Implement a multi-stage RC (Remote-Controlled) signal converter and a dashboard for small-robotics and ESC (Electronic Speed Controller) testing
 
+### Full Typed report provided [dtope004-dres002_custom_lab_report.pdf](https://github.com/dtopete/CS122-FinalProject/blob/main/dtope004-dres002_custom_lab_report.pdf)
+
 # Hardware
 * **Microcontroller**: [Raspberry Pi Pico 2W (x2)](https://www.raspberrypi.com/products/raspberry-pi-pico-2/?variant=pico-2-w), [pinout](https://pip-assets.raspberrypi.com/categories/1088-raspberry-pi-pico-2-w/documents/RP-008305-DS-1-pico-2-w-pinout.pdf?disposition=inline), [C/C++ SDK](https://pip-assets.raspberrypi.com/categories/609-microcontroller-boards/documents/RP-009085-KB-1-raspberry-pi-pico-c-sdk.pdf)
 * **FPGA**: [iCE Sugar Pro](https://github.com/wuxx/icesugar-pro), [pinout](https://www.jjhorton.co.uk/img/iCESugarpro-pinmap.png)
@@ -15,7 +17,7 @@ Implement a multi-stage RC (Remote-Controlled) signal converter and a dashboard 
 
 # Wiring
 ## Pico 2W[0]
-### Codebase in icesugar-pro-framebuffer/sw/
+### Codebase in [icesugar-pro-framebuffer/sw/](https://github.com/dtopete/CS122-FinalProject/tree/main/icesugar-pro-framebuffer/sw)
 * **UART1** - Receives ELRS from ESP32-S3 LoRA Dev Board
 * **GP15** - Sends Display Data for Pico[1]
 * **SPI0** - Sends Display Data for FPGA for LCD
@@ -27,7 +29,7 @@ Implement a multi-stage RC (Remote-Controlled) signal converter and a dashboard 
 * Decodes PPM from Pico[0] and splits it across 8 PWM Channels
 
 ## FPGA
-### Codebase in icesugar-pro-framebuffer/hw/
+### Codebase in [icesugar-pro-framebuffer/hw/](https://github.com/dtopete/CS122-FinalProject/tree/main/icesugar-pro-framebuffer/hw)
 * Runs icesugarpro Framebuffer
 
 ## Stage 1
