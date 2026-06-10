@@ -7,3 +7,17 @@ venv/*
 *.py
 *.cmake
 CMakeCache.txt
+ppmRead.dis
+*.u2f
+*.bin
+*.exe
+*.hex
+*.elf
+*.map
+*.make
+*.cmake
+*.json
+*.ld
+generated/*
+generated/
+Makefile
