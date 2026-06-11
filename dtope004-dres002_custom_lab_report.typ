@@ -5,7 +5,6 @@
 = 
 
 #set align(left)
-=== *TODO*: once implemented, add the part where it receives ELRS CRSF, encodes it into PPM to send to the FPGA, and the FPGA decodes the PPM and outputs two PWM signals via two wires that control a servo and an ESC.
 = High-level description of the project
 Our project implements a multi-stage remote-control signal converter and live dashboard, using a Raspberry Pi Pico 2W to receive ExpressLRS (ELRS) CRSF telemetry and display channel values on an FPGA-driven 4.3" RGB565 LCD.
 The Pico parses incoming RC channel data over UART, converts it into a format usable for visualization, and streams framebuffer updates to an iCE Sugar Pro FPGA display controller.
@@ -24,7 +23,6 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 + The FPGA's LCD shows eight channel bars and numerical values representing RC channel positions inputs from the remote.
 + If the display fails to render properly (i.e. random artifacts), press the GP15 button to force a redraw the screen.
 + To inspect serial telemetry, connect to the Pico USB serial console and observe `UART1/GP5` status output.
-+ *TODO* Not yet developed, but, the part where the PWM is output (*DOUBLE CHECK PLEASE*)
 + The Pico also generates a PPM signal from the decoded channels for the FPGA-side PWM output stage.
 + Either using a second Pico or the FPGA connect the Motor driver to the FPGA or pico PWM output.
 + Now the Motor driver will drive the motors based on the PWM signal generated from the decoded PPM.
@@ -58,25 +56,38 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 = How you met the requirements listed in the proposal
 We started by building a custom firmware for the ESP32-S3 LoRA to receive ELRS CRSF data from the remote controller.
 We then implemented the signal conversion pipeline by receiving ELRS CRSF on the Pico UART1 interface and parsing channel data with `CRSFReader`. 
-The Pico renders an LVGL-based dashboard showing eight RC channels on the FPGA-driven LCD, meeting the display and monitoring requirements. The system also supports a hardware button to request display redraws, and it reports serial monitoring status over USB serial.
+The Pico renders an LVGL-based dashboard showing eight RC channels on the FPGA-driven LCD, meeting the display and monitoring requirements.
+The main Pico encodes the incoming data into PPM and outputs it to another Pico and the FPGA. The FPGA and the accesory Pico both decode the PPM signal into 8 PWM Channels.
+The system also supports a hardware button to request display redraws, and it reports serial monitoring status over USB serial.
 This satisfies the proposal's goals for real-time RC signal conversion, FPGA display integration, and user feedback.
-- *TODO*: Talk about the receiving PPM on the Pico to sending that data over to FPGA, then FPGA outputs two PWM channels.
 
 #pagebreak()
 
 = Wiring diagram for the physical hardware setup
-== *TODO*: Do exact wiring
+#figure(
+  image("assets/pico0Wire.png")
+)
+#figure(
+  image("assets/pico1Wire.png")
+)
+#figure(
+  image("assets/fpgaWire.png")
+)
 - Pico UART1 RX -> ELRS receiver TX / ESP32-S3 UART output
 - Pico SPI0 MOSI/SCLK/CS -> FPGA display controller input
 - Pico GP15 -> button input with pull-up to request display redraw
 - 4.3" TFT LCD powered from the FPGA board and driven by the FPGA framebuffer
 - Pico USB -> host PC for power and serial logging
 
+#pagebreak()
 = Design Diagram
 The design consists of three main subsystems:
 1. ELRS receiver input: ESP32-S3 sends CRSF data to the Pico UART1 RX pin.
 2. Pico signal processor: `main.cpp` polls UART1, parses CRSF frames, updates channel values, and maintains an LVGL dashboard.
 3. FPGA display output: the Pico sends framebuffer data over SPI to the iCE Sugar Pro board, which drives the 480x272 LCD.
+#figure(
+  image("assets/designDiagram.png")
+)
 
 = AI usage
 Limited AI assistance was used as a debugging aid during development, mainly for the custom ExpressLRS firmware and receiver configuration, and for getting the Pico CRSF UART input working by checking that CRSF data was being received correctly. Although, pyserial and printf statements were mainly used for debugging the data (PPM, PWM, and UART) sent and received across both Picos.
