@@ -79,7 +79,7 @@ The design consists of three main subsystems:
 3. FPGA display output: the Pico sends framebuffer data over SPI to the iCE Sugar Pro board, which drives the 480x272 LCD.
 
 = AI usage
-Limited AI assistance was used as a debugging aid during development, mainly for the custom ExpressLRS firmware and receiver configuration, and for getting the Pico CRSF UART input working by checking that CRSF data was being received correctly.
+Limited AI assistance was used as a debugging aid during development, mainly for the custom ExpressLRS firmware and receiver configuration, and for getting the Pico CRSF UART input working by checking that CRSF data was being received correctly. Although, pyserial and printf statements were mainly used for debugging the data (PPM, PWM, and UART) sent and received across both Picos.
 
 = Acknowledgements
 We thank the UCR CS122A course staff for the framebuffer and LVGL starter code, and the open-source communities behind the Raspberry Pi Pico SDK, LVGL, and ExpressLRS. Additional thanks to team member Troy Drescher for the custom ELRS firmware and receiver configuration work.
