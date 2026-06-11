@@ -7,7 +7,7 @@
 #set align(left)
 = High-level description of the project
 Our project implements a multi-stage remote-control signal converter and live dashboard, using a Raspberry Pi Pico 2W to receive ExpressLRS (ELRS) CRSF telemetry and display channel values on an FPGA-driven 4.3" RGB565 LCD.
-The Pico parses incoming RC channel data over UART, converts it into a format usable for visualization, and streams framebuffer updates to an iCE Sugar Pro FPGA display controller.
+The Pico parses incoming RC channel data over UART, converts it into a format usable for visualization, and streams framebuffer updates to an iCE Sugar Pro FPGA display controller. From the same UART data stream, it encodes the channel data into PPM and outputs it to a secondary Pico (tested) and the FPGA (untested), where they decode the PPM signal into eight PWM Channels.
 
 = Elements of complexity
 - Real-time parsing of high-speed ELRS CRSF packets at 420000 baud using the Raspberry Pi Pico UART.
