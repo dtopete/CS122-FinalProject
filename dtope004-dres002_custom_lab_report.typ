@@ -22,7 +22,7 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 + Pair a remote controller to the ESP32-S3 LoRA receiver to start receiving CRSF packets.
 + The FPGA's LCD shows eight channel bars and numerical values representing RC channel positions inputs from the remote.
 + If the display fails to render properly (i.e. random artifacts), press the GP15 button to force a redraw the screen.
-+ To inspect serial telemetry, connect to the Pico USB serial console and observe `UART1/GP5` status output.
++ To inspect serial telemetry, connect to the Pico USB serial console and observe `UART1/GP5` status output to observe data from ESP32-S3. Also observe the PWM output of Pico[1] via serial.
 + The Pico also generates a PPM signal from the decoded channels for the FPGA-side PWM output stage.
 + Either using a second Pico or the FPGA connect the Motor driver to the FPGA or pico PWM output.
 + Now the Motor driver will drive the motors based on the PWM signal generated from the decoded PPM.
@@ -57,6 +57,10 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - Pulse Width Modulation (PWM) used to tell the motor ESC from the FPGA, the speed to run the motor at.
 
 = How you met the requirements listed in the proposal
+== FPGA
+== Pico
+== RGB LCD
+== Interrupt Based Execution
 We started by building a custom firmware for the ESP32-S3 LoRA to receive ELRS CRSF data from the remote controller.
 We then implemented the signal conversion pipeline by receiving ELRS CRSF on the Pico UART1 interface and parsing channel data with `CRSFReader`. 
 The Pico renders an LVGL-based dashboard showing eight RC channels on the FPGA-driven LCD, meeting the display and monitoring requirements.
@@ -67,6 +71,12 @@ This satisfies the proposal's goals for real-time RC signal conversion, FPGA dis
 #pagebreak()
 
 = Wiring diagram for the physical hardware setup
+- Pico UART1 RX -> ELRS receiver TX / ESP32-S3 UART output
+- Pico SPI0 MOSI/SCLK/CS -> FPGA display controller input
+- Pico GP15 -> button input with pull-up to request display redraw
+- 4.3" TFT LCD powered from the FPGA board and driven by the FPGA framebuffer
+- Pico USB -> host PC for power and serial logging
+
 #figure(
   image("assets/pico0Wire.png")
 )
@@ -76,12 +86,6 @@ This satisfies the proposal's goals for real-time RC signal conversion, FPGA dis
 #figure(
   image("assets/fpgaWire.png")
 )
-- Pico UART1 RX -> ELRS receiver TX / ESP32-S3 UART output
-- Pico SPI0 MOSI/SCLK/CS -> FPGA display controller input
-- Pico GP15 -> button input with pull-up to request display redraw
-- 4.3" TFT LCD powered from the FPGA board and driven by the FPGA framebuffer
-- Pico USB -> host PC for power and serial logging
-
 #figure(
   image("assets/display.jpg")
 )
