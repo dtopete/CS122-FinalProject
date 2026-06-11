@@ -57,10 +57,11 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - Pulse Width Modulation (PWM) used to tell the motor ESC from the FPGA, the speed to run the motor at.
 
 = How you met the requirements listed in the proposal
-== FPGA
-== Pico
-== RGB LCD
-== Interrupt Based Execution
+FPGA
+Pico
+RGB LCD
+Interrupt Based Execution
+= Goals Accomplished.
 We started by building a custom firmware for the ESP32-S3 LoRA to receive ELRS CRSF data from the remote controller.
 We then implemented the signal conversion pipeline by receiving ELRS CRSF on the Pico UART1 interface and parsing channel data with `CRSFReader`. 
 The Pico renders an LVGL-based dashboard showing eight RC channels on the FPGA-driven LCD, meeting the display and monitoring requirements.
