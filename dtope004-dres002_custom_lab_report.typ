@@ -53,6 +53,8 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - UART serial communication between ESP32 and Raspberry Pi Pico to transfer ExpressLRS(ELRS) data via Crossfire Serial Protocol (CRSF)
 - SPI framebuffer transfer from Pico to FPGA to display
 - LVGL internal display flush callbacks for screen updates
+- Pulse Position Modulation (PPM) used between pico and FPGA to send decoded pulse widths.
+- Pulse Width Modulation (PWM) used to tell the motor ESC from the FPGA, the speed to run the motor at.
 
 = How you met the requirements listed in the proposal
 We started by building a custom firmware for the ESP32-S3 LoRA to receive ELRS CRSF data from the remote controller.
