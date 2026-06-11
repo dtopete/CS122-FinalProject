@@ -7,7 +7,7 @@
  * - Original project licensed under the MIT License.
  * - Modified by Troy Drescher for this project.
  * Modified for Arduino Uno R4 WiFi / Renesas RA4M1 by Troy, 2025.
- * Modified for Raspberry Pi Pico SDK / RP2350 by Troy, 2026.
+ * Modified for Raspberry Pi Pico SDK by Troy, 2026.
  *
  * SPDX-License-Identifier: MIT
  */
