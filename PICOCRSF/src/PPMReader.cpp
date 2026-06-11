@@ -5,7 +5,7 @@
  * Copyright 2021 Dmitry Grigoryev
  * Copyright 2025-2026 Troy Drescher
  * Modified for Arduino Uno R4 WiFi / Renesas RA4M1 by Troy, 2025.
- * Modified for Raspberry Pi Pico SDK / RP2350 by Troy, 2026.
+ * Modified for Raspberry Pi Pico SDK by Troy, 2026.
  *
  * This is a local spinoff inspired by the Arduino PPM-reader library:
  * https://github.com/dimag0g/PPM-reader

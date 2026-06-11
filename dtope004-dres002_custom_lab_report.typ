@@ -46,6 +46,7 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - CRSFReader protocol parser
 - Pico `pico_stdlib`, `hardware_spi`, `hardware_uart`, and `hardware_gpio`
 - Modified Custom version of ExpressLRS firmware. https://github.com/ExpressLRS/ExpressLRS
+- PPMReader and PPM Encoder Libraries.
 
 = List of any protocols used
 - ExpressLRS CRSF for RC channel telemetry input
