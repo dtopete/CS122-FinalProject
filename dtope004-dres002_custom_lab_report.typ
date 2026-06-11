@@ -31,9 +31,8 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - Raspberry Pi Pico 2W
 - iCE Sugar Pro FPGA with development board
 - 4.3" TFT LCD 480x272 RGB565 display with PMOD interface
-- ESP32-S3 LoRA development board running custom ExpressLRS firmware
-- *TODO: INSERT SPECIFIC REMOTE CONTROLLER WE USED*
-//- Custom ELRS receiver PCB (as available)
+- ESP32-S3 with integrated LR1121 module LoRA development board running custom ExpressLRS firmware
+- RadioMaster Zorro running EdgeTX with Ranger Nano ELRS Transmitter Module running customized ExpressLRS firmware.
 
 
 = List of any software libraries used
