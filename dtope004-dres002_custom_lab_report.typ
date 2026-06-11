@@ -78,8 +78,6 @@ The design consists of three main subsystems:
 2. Pico signal processor: `main.cpp` polls UART1, parses CRSF frames, updates channel values, and maintains an LVGL dashboard.
 3. FPGA display output: the Pico sends framebuffer data over SPI to the iCE Sugar Pro board, which drives the 480x272 LCD.
 
-#pagebreak()
-
 = AI usage
 Limited AI assistance was used as a debugging aid during development, mainly for the custom ExpressLRS firmware and receiver configuration, and for getting the Pico CRSF UART input working by checking that CRSF data was being received correctly.
 
