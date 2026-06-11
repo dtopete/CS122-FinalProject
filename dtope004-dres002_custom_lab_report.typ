@@ -82,6 +82,16 @@ This satisfies the proposal's goals for real-time RC signal conversion, FPGA dis
 - 4.3" TFT LCD powered from the FPGA board and driven by the FPGA framebuffer
 - Pico USB -> host PC for power and serial logging
 
+#figure(
+  image("assets/display.jpg")
+)
+#figure(
+  image("assets/closeUp.jpg")
+)
+#figure(
+  image("assets/pictureFar.jpg")
+)
+
 #pagebreak()
 = Design Diagram
 The design consists of three main subsystems:
@@ -91,6 +101,7 @@ The design consists of three main subsystems:
 #figure(
   image("assets/designDiagram.png")
 )
+
 
 = AI usage
 Limited AI assistance was used as a debugging aid during development, mainly for the custom ExpressLRS firmware and receiver configuration, and for getting the Pico CRSF UART input working by checking that CRSF data was being received correctly. Although, pyserial and printf statements were mainly used for debugging the data (PPM, PWM, and UART) sent and received across both Picos.
