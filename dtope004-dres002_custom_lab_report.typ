@@ -62,6 +62,8 @@ The Pico renders an LVGL-based dashboard showing eight RC channels on the FPGA-d
 This satisfies the proposal's goals for real-time RC signal conversion, FPGA display integration, and user feedback.
 - *TODO*: Talk about the receiving PPM on the Pico to sending that data over to FPGA, then FPGA outputs two PWM channels.
 
+#pagebreak()
+
 = Wiring diagram for the physical hardware setup
 == *TODO*: Do exact wiring
 - Pico UART1 RX -> ELRS receiver TX / ESP32-S3 UART output
