@@ -26,7 +26,7 @@
 /*																		*/
 
 #ifndef _SPI_DISPLAY_H_
-#define _SPI_DSIPAY_H_
+#define _SPI_DISPLAY_H_
 
 /* ------------------------------------------------------------ */
 /*					Miscellaneous Declarations					*/
