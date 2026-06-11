@@ -15,15 +15,19 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - Integration of LVGL on the Pico to render a real-time channel monitor UI with eight channels, including dynamic bar graphs and numeric labels.
 - SPI-based framebuffer output from the Pico to the FPGA ribbon cable display.
 - Hardware button interrupt-driven redraw requests to redraw the screen when display artifacts occur.
-- Developed a custom ExpressLRS firmware for the ESP32-S3 to receive CRSF telemetry data. *CHECK UP* 
-
+- Developed a custom ExpressLRS firmware for the ESP32-S3 to receive CRSF telemetry data.
+- Pico-side PPM signal generation from decoded CRSF channels.
+- FPGA-side HDL logic for PPM pulse measurement and two PWM outputs.
 = User guide: explain how the user will interact with the system
 1. Power the Pico and FPGA display hardware.
 + Pair a remote controller to the ESP32-S3 LoRA receiver to start receiving CRSF packets.
 + The FPGA's LCD shows eight channel bars and numerical values representing RC channel positions inputs from the remote.
 + If the display fails to render properly (i.e. random artifacts), press the GP15 button to force a redraw the screen.
 + To inspect serial telemetry, connect to the Pico USB serial console and observe `UART1/GP5` status output.
-+ *TODO* Not yet developed, but, the part where the PWM is output
++ *TODO* Not yet developed, but, the part where the PWM is output (*DOUBLE CHECK PLEASE*)
++ The Pico also generates a PPM signal from the decoded channels for the FPGA-side PWM output stage.
++ Either using a second Pico or the FPGA connect the Motor driver to the FPGA or pico PWM output.
++ Now the Motor driver will drive the motors based on the PWM signal generated from the decoded PPM.
 
 #pagebreak() // Formatting purposes
 
@@ -33,6 +37,8 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - 4.3" TFT LCD 480x272 RGB565 display with PMOD interface
 - ESP32-S3 with integrated LR1121 module LoRA development board running custom ExpressLRS firmware
 - RadioMaster Zorro running EdgeTX with Ranger Nano ELRS Transmitter Module running customized ExpressLRS firmware.
+- YoungRC Drive ESC Brushed Electric Speed Controller
+- 3V-12V 1000RPM n20 brushed motor.
 
 
 = List of any software libraries used
@@ -41,6 +47,7 @@ The Pico parses incoming RC channel data over UART, converts it into a format us
 - Custom SPIDisplay framebuffer driver provided by Dr. Allan Knight
 - CRSFReader protocol parser
 - Pico `pico_stdlib`, `hardware_spi`, `hardware_uart`, and `hardware_gpio`
+- Modified Custom version of ExpressLRS firmware. https://github.com/ExpressLRS/ExpressLRS
 
 = List of any protocols used
 - ExpressLRS CRSF for RC channel telemetry input
